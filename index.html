@@ -17,24 +17,45 @@
             align-content: center;
             justify-content: center;
             text-align: center;
+            background: rgb(230, 230, 230);
         }
 
         #screen {
             width: 500px;
             height: 500px;
-            border: 1px solid black;
-            margin: 20px 0px;
+            /* border: 1px solid black; */
+            box-shadow: 0px 0px 20px rgb(207, 207, 207);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0px 0px 0px;
+            background: white;
         }
 
-        button{
+        button {
             padding: 10px;
             margin: 10px 0px;
             font-size: x-large;
             width: 250px;
         }
 
-        #formula{
+        #formula {
             padding: 0.5em;
+            margin: 10px 0px;
+            background: rgb(42, 42, 42);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgb(207, 207, 207);
+        }
+
+        #buttonBox{
+            background: white;
+            border-radius: 10px;
+            padding: 10px 0px;
+            box-shadow: 0px 0px 20px rgb(207, 207, 207);
+        }
+
+        #screenCanvas:hover{
+            outline: 1px solid rgb(231, 231, 231);
         }
     </style>
 </head>
@@ -46,12 +67,15 @@
     </div>
 
     <div id="formula"></div>
-
-    <div><button onclick="cosFactor--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Cos--</button>
-    <button onclick="cosFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Cos++</button></div>
-    <div><button onclick="sinFactor--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Sin--</button>
-    <button onclick="sinFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Sin++</button></div>
-    <!-- <button onclick="thickness++; ctx.clearRect(0,0,canvasWidth,canvasHeight)">Thickness++</button> -->
+    <div id="buttonBox">
+        <div><button onclick="cosFactor--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Cos--</button>
+            <button onclick="cosFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Cos++</button>
+        </div>
+        <div><button onclick="sinFactor--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Sin--</button>
+            <button onclick="sinFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Sin++</button>
+        </div>
+        <!-- <button onclick="thickness++; ctx.clearRect(0,0,canvasWidth,canvasHeight)">Thickness++</button> -->
+    </div>
 
 </body>
 <script>
@@ -79,7 +103,6 @@
     }
 
     async function drawThing(fillstyle, size) {
-        var resolution = 1000
         var sleepDelayMs = 1
 
         for (var i = 0; i < resolution; i++) {
@@ -89,7 +112,7 @@
         }
     }
 
-    function updateFormula(){
+    function updateFormula() {
         var e = document.getElementById("formula")
         e.innerHTML = `x=cos(${cosFactor}θ), y=sin(${sinFactor}θ)`
     }
@@ -102,6 +125,7 @@
     var cosFactor = 1
     var sinFactor = 1
     var thickness = 20
+    var resolution = 1000
 
     // init
     async function init() {
