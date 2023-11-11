@@ -47,14 +47,14 @@
             box-shadow: 0px 0px 20px rgb(207, 207, 207);
         }
 
-        #buttonBox{
+        #buttonBox {
             background: white;
             border-radius: 10px;
             padding: 10px 0px;
             box-shadow: 0px 0px 20px rgb(207, 207, 207);
         }
 
-        #screenCanvas:hover{
+        #screenCanvas:hover {
             outline: 1px solid rgb(231, 231, 231);
         }
     </style>
@@ -74,6 +74,13 @@
         <div><button onclick="sinFactor--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Sin--</button>
             <button onclick="sinFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Sin++</button>
         </div>
+        <button onclick="setTimeout(varyPhase)">Vary phase</button>
+        <!-- <div><button onclick="xPhase--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">xPhase--</button>
+            <button onclick="xPhase++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">xPhase++</button>
+        </div>
+        <div><button onclick="yPhase--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">yPhase--</button>
+            <button onclick="yPhase++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">yPhase++</button>
+        </div> -->
         <!-- <button onclick="thickness++; ctx.clearRect(0,0,canvasWidth,canvasHeight)">Thickness++</button> -->
     </div>
 
@@ -88,8 +95,8 @@
     function drawPointOnCircle(pct, clear, size) {
         var radians = 2 * Math.PI * (pct)
         var canvasWidthOffset = canvasWidth - size
-        var circleX = Math.round((Math.cos(cosFactor * radians) * canvasWidthOffset / 2) + canvasWidthOffset / 2)
-        var circleY = Math.round((Math.sin(sinFactor * radians) * canvasWidthOffset / 2) + canvasWidthOffset / 2)
+        var circleX = Math.round((Math.cos((cosFactor * radians) + xPhase) * canvasWidthOffset / 2) + canvasWidthOffset / 2)
+        var circleY = Math.round((Math.sin((sinFactor * radians) + yPhase) * canvasWidthOffset / 2) + canvasWidthOffset / 2)
 
         size = size ? size : 1
 
@@ -114,7 +121,15 @@
 
     function updateFormula() {
         var e = document.getElementById("formula")
-        e.innerHTML = `x=cos(${cosFactor}θ), y=sin(${sinFactor}θ)`
+        e.innerHTML = `x=cos(${cosFactor}θ+${xPhase.toFixed(2)}), y=sin(${sinFactor}θ+${yPhase.toFixed(2)})`
+    }
+
+    async function varyPhase() {
+        while (true) {
+            xPhase += 0.01
+            updateFormula();
+            await sleep(100)
+        }
     }
 
     // globals
@@ -124,20 +139,27 @@
     var canvasHeight = c.height;
     var cosFactor = 1
     var sinFactor = 1
+    var xPhase = 0
+    var yPhase = 0
     var thickness = 20
     var resolution = 1000
+    var colorArray = [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "indigo",
+        "violet"
+    ]
 
     // init
     async function init() {
         updateFormula();
         while (true) {
-            setTimeout(drawThing, 100, "red", thickness);
-            setTimeout(drawThing, 1000, "orange", thickness);
-            setTimeout(drawThing, 2000, "yellow", thickness);
-            setTimeout(drawThing, 3000, "green", thickness);
-            setTimeout(drawThing, 4000, "blue", thickness);
-            setTimeout(drawThing, 5000, "indigo", thickness);
-            setTimeout(drawThing, 6000, "violet", thickness);
+            for (var i = 0; i < colorArray.length; i++) {
+                setTimeout(drawThing, i * 1000, colorArray[i], thickness);
+            }
             await sleep(10000 * Math.random())
         }
     }
