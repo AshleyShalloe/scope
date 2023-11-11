@@ -1,0 +1,96 @@
+<html>
+
+<head>
+    <style>
+        html {
+            font-family: sans-serif;
+        }
+
+        body {
+            margin: 0 auto;
+            display: grid;
+            align-content: center;
+            justify-content: center;
+        }
+
+        #screen {
+            width: 500px;
+            height: 500px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="screen">
+        <canvas id="screenCanvas" width="500" height="500"></canvas>
+    </div>
+
+    <button onclick="cosFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight)">Cos++</button>
+    <button onclick="sinFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight)">Sin++</button>
+
+</body>
+<script>
+    'use strict'
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function drawPointOnCircle(pct, clear, size){
+        var radians = 2 * Math.PI * (pct)
+        var canvasWidthOffset = canvasWidth - size
+        var circleX = Math.round((Math.cos(cosFactor*radians) * canvasWidthOffset/2) + canvasWidthOffset/2)
+        var circleY = Math.round((Math.sin(sinFactor*radians) * canvasWidthOffset/2) + canvasWidthOffset/2)
+        
+        size = size ? size : 1
+
+        if (!clear){
+            ctx.fillRect(circleX, circleY, size, size)
+            ctx.stroke();
+        }
+        else{
+            ctx.clearRect(circleX, circleY, size, size)
+        }
+    }
+
+    async function drawThing(fillstyle, size) {
+        var resolution = 1000
+        var sleepDelayMs = 1
+
+        for (var i=0; i<resolution; i++){
+            ctx.fillStyle = fillstyle ? fillstyle : "blue"
+            drawPointOnCircle(i/resolution, false, size)
+            await sleep(sleepDelayMs);
+        }
+    }
+
+    // globals
+    var c = document.getElementById("screenCanvas");
+    var ctx = c.getContext("2d");
+    var canvasWidth = c.width;
+    var canvasHeight = c.height;
+    var cosFactor = 1
+    var sinFactor = 1
+
+    // init
+    async function init() {
+        var thickness = 20
+        while (true){
+            setTimeout(drawThing, 100, "red", thickness);
+            setTimeout(drawThing, 1000, "orange", thickness);
+            setTimeout(drawThing, 2000, "yellow", thickness);
+            setTimeout(drawThing, 3000, "green", thickness);
+            setTimeout(drawThing, 4000, "blue", thickness);
+            setTimeout(drawThing, 5000, "indigo", thickness);
+            setTimeout(drawThing, 6000, "violet", thickness);
+            await sleep(10000*Math.random())
+        }
+    }
+
+    init();
+
+</script>
+
+</html>
