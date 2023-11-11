@@ -31,11 +31,13 @@
             background: white;
         }
 
-        button {
-            padding: 10px;
-            margin: 10px 0px;
+        button,
+        select {
+            padding: 5px;
+            margin: 5px 0px;
             font-size: x-large;
             width: 250px;
+            display: inline-block;
         }
 
         #formula {
@@ -68,20 +70,21 @@
 
     <div id="formula"></div>
     <div id="buttonBox">
-        <div><button onclick="cosFactor--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Cos--</button>
-            <button onclick="cosFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Cos++</button>
+        <div><button onclick="cosFactor--; clearCanvas(); updateFormula()">Cos--</button>
+            <button onclick="cosFactor++; clearCanvas(); updateFormula()">Cos++</button>
         </div>
-        <div><button onclick="sinFactor--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Sin--</button>
-            <button onclick="sinFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Sin++</button>
+        <div><button onclick="sinFactor--; clearCanvas(); updateFormula()">Sin--</button>
+            <button onclick="sinFactor++; clearCanvas(); updateFormula()">Sin++</button>
         </div>
-        <button onclick="setTimeout(varyPhase)">Vary phase</button>
-        <!-- <div><button onclick="xPhase--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">xPhase--</button>
-            <button onclick="xPhase++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">xPhase++</button>
+        <div><button onclick="setTimeout(varyPhase)">Vary phase</button>
+            <!-- <div><button onclick="xPhase--; clearCanvas(); updateFormula()">xPhase--</button>
+            <button onclick="xPhase++; clearCanvas(); updateFormula()">xPhase++</button>
         </div>
-        <div><button onclick="yPhase--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">yPhase--</button>
-            <button onclick="yPhase++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">yPhase++</button>
+        <div><button onclick="yPhase--; clearCanvas(); updateFormula()">yPhase--</button>
+            <button onclick="yPhase++; clearCanvas(); updateFormula()">yPhase++</button>
         </div> -->
-        <!-- <button onclick="thickness++; ctx.clearRect(0,0,canvasWidth,canvasHeight)">Thickness++</button> -->
+            <!-- <button onclick="thickness++; clearCanvas()">Thickness++</button> -->
+        </div>
     </div>
 
 </body>
@@ -90,6 +93,10 @@
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     }
 
     function drawPointOnCircle(pct, clear, size) {
@@ -132,6 +139,23 @@
         }
     }
 
+    function initColourDictDropdown() {
+        var outhtml = "<select onchange='changeColourscheme()' id='colorschemeSelection'><option disabled selected>Colour scheme</option>"
+        var caArray = Object.keys(colourDict).sort()
+
+        for (var ca_idx in caArray) {
+            outhtml += `<option value='${caArray[ca_idx]}'>${caArray[ca_idx]}</option>`
+        }
+        outhtml += "</select>"
+        document.getElementById("buttonBox").innerHTML = document.getElementById("buttonBox").innerHTML + outhtml
+    }
+
+    function changeColourscheme() {
+        var colSelector = document.getElementById('colorschemeSelection')
+        var col = colSelector.value
+        colourArray = colourDict[col]
+    }
+
     // globals
     var c = document.getElementById("screenCanvas");
     var ctx = c.getContext("2d");
@@ -143,22 +167,67 @@
     var yPhase = 0
     var thickness = 20
     var resolution = 1000
-    var colorArray = [
-        "red",
-        "orange",
-        "yellow",
-        "green",
-        "blue",
-        "indigo",
-        "violet"
-    ]
+    var colourDict = {
+        "rainbow": [
+            "red",
+            "orange",
+            "yellow",
+            "green",
+            "blue",
+            "indigo",
+            "violet"
+        ],
+        "trans": [
+            "skyblue",
+            "pink",
+            "#fafafa",
+            "pink",
+            "skyblue"
+        ],
+        "bi": [
+            "navy",
+            "purple",
+            "hotpink"
+        ],
+        "tfl": [
+            "#000000",
+            "#ffffff",
+            "#e1251b",
+            "#ef3824",
+            "#a65a2a",
+            "#ee7623",
+            "#fba800",
+            "#f0bc0b",
+            "#ffcd00",
+            "#76bc21",
+            "#5e9732",
+            "#007934",
+            "#6bcdb2",
+            "#00afaa",
+            "#009dd9",
+            "#00a0df",
+            "#7b868c",
+            "#323e48",
+            "#005cb9",
+            "#002043",
+            "#000f9f",
+            "#734fa0",
+            "#773dbd",
+            "#c028b9",
+            "#870f54",
+            "#ec9bad",
+            "#ce0e2d"
+        ]
+    }
+    var colourArray = colourDict["rainbow"]
 
     // init
     async function init() {
+        initColourDictDropdown();
         updateFormula();
         while (true) {
-            for (var i = 0; i < colorArray.length; i++) {
-                setTimeout(drawThing, i * 1000, colorArray[i], thickness);
+            for (var i = 0; i < colourArray.length; i++) {
+                setTimeout(drawThing, i * 1000, colourArray[i], thickness);
             }
             await sleep(10000 * Math.random())
         }
