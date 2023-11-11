@@ -1,6 +1,11 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <title>Scope</title>
+
     <style>
         html {
             font-family: sans-serif;
@@ -38,19 +43,19 @@
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    function drawPointOnCircle(pct, clear, size){
+    function drawPointOnCircle(pct, clear, size) {
         var radians = 2 * Math.PI * (pct)
         var canvasWidthOffset = canvasWidth - size
-        var circleX = Math.round((Math.cos(cosFactor*radians) * canvasWidthOffset/2) + canvasWidthOffset/2)
-        var circleY = Math.round((Math.sin(sinFactor*radians) * canvasWidthOffset/2) + canvasWidthOffset/2)
-        
+        var circleX = Math.round((Math.cos(cosFactor * radians) * canvasWidthOffset / 2) + canvasWidthOffset / 2)
+        var circleY = Math.round((Math.sin(sinFactor * radians) * canvasWidthOffset / 2) + canvasWidthOffset / 2)
+
         size = size ? size : 1
 
-        if (!clear){
+        if (!clear) {
             ctx.fillRect(circleX, circleY, size, size)
             ctx.stroke();
         }
-        else{
+        else {
             ctx.clearRect(circleX, circleY, size, size)
         }
     }
@@ -59,9 +64,9 @@
         var resolution = 1000
         var sleepDelayMs = 1
 
-        for (var i=0; i<resolution; i++){
+        for (var i = 0; i < resolution; i++) {
             ctx.fillStyle = fillstyle ? fillstyle : "blue"
-            drawPointOnCircle(i/resolution, false, size)
+            drawPointOnCircle(i / resolution, false, size)
             await sleep(sleepDelayMs);
         }
     }
@@ -77,7 +82,7 @@
     // init
     async function init() {
         var thickness = 20
-        while (true){
+        while (true) {
             setTimeout(drawThing, 100, "red", thickness);
             setTimeout(drawThing, 1000, "orange", thickness);
             setTimeout(drawThing, 2000, "yellow", thickness);
@@ -85,7 +90,7 @@
             setTimeout(drawThing, 4000, "blue", thickness);
             setTimeout(drawThing, 5000, "indigo", thickness);
             setTimeout(drawThing, 6000, "violet", thickness);
-            await sleep(10000*Math.random())
+            await sleep(10000 * Math.random())
         }
     }
 
