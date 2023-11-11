@@ -16,12 +16,25 @@
             display: grid;
             align-content: center;
             justify-content: center;
+            text-align: center;
         }
 
         #screen {
             width: 500px;
             height: 500px;
             border: 1px solid black;
+            margin: 20px 0px;
+        }
+
+        button{
+            padding: 10px;
+            margin: 10px 0px;
+            font-size: x-large;
+            width: 250px;
+        }
+
+        #formula{
+            padding: 0.5em;
         }
     </style>
 </head>
@@ -32,8 +45,13 @@
         <canvas id="screenCanvas" width="500" height="500"></canvas>
     </div>
 
-    <button onclick="cosFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight)">Cos++</button>
-    <button onclick="sinFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight)">Sin++</button>
+    <div id="formula"></div>
+
+    <div><button onclick="cosFactor--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Cos--</button>
+    <button onclick="cosFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Cos++</button></div>
+    <div><button onclick="sinFactor--; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Sin--</button>
+    <button onclick="sinFactor++; ctx.clearRect(0,0,canvasWidth,canvasHeight); updateFormula()">Sin++</button></div>
+    <!-- <button onclick="thickness++; ctx.clearRect(0,0,canvasWidth,canvasHeight)">Thickness++</button> -->
 
 </body>
 <script>
@@ -71,6 +89,11 @@
         }
     }
 
+    function updateFormula(){
+        var e = document.getElementById("formula")
+        e.innerHTML = `x=cos(${cosFactor}θ), y=sin(${sinFactor}θ)`
+    }
+
     // globals
     var c = document.getElementById("screenCanvas");
     var ctx = c.getContext("2d");
@@ -78,10 +101,11 @@
     var canvasHeight = c.height;
     var cosFactor = 1
     var sinFactor = 1
+    var thickness = 20
 
     // init
     async function init() {
-        var thickness = 20
+        updateFormula();
         while (true) {
             setTimeout(drawThing, 100, "red", thickness);
             setTimeout(drawThing, 1000, "orange", thickness);
